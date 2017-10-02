@@ -1,0 +1,14 @@
+profile::base::hosts::list:
+  wlsmaster.example.com:
+    ip: 192.168.253.10
+    host_aliases:
+      - wlsmaster
+      - puppet
+  wls1.example.com:
+    ip: 10.10.10.30
+    host_aliases:
+      - wls1
+  wls2.example.com:
+    ip: 10.10.10.31
+    host_aliases:
+      - wls2

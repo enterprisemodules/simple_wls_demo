@@ -1,0 +1,25 @@
+---
+
+role: role::wls::my_domain_master
+
+profile::wls::my_domain::domain::servers:
+  wls1:
+    machine_name:    wls_machine_1
+    listenaddress:   wls1.example.com
+    listen_port:     7005
+    ssl_listen_port: 7006
+  wls2:
+    machine_name:    wls_machine_2
+    listenaddress:   wls2.example.com
+    listen_port:     7005
+    ssl_listen_port: 7006
+
+profile::wls::my_domain::domain::admin_server_arguments:
+  - '-XX:PermSize=64m'
+  - '-Xms768m'
+  - '-Xmx768m'
+
+profile::wls::my_domain::datasources::ds0::host:      a_host
+profile::wls::my_domain::datasources::ds0::database:  a_database
+profile::wls::my_domain::datasources::ds0::username:  a_username
+profile::wls::my_domain::datasources::ds0::password:  a_password

@@ -1,0 +1,22 @@
+---
+pe-wlsmaster:
+  public_ip:       '192.168.253.10'
+  cpucount:         2
+  ram:              3072
+  type:             pe-master
+ml-wls1:
+  public_ip:        '10.10.10.30'
+  cpucount:         2
+  type:             masterless
+pe-wls1:
+  public_ip:        '10.10.10.30'
+  cpucount:         2
+  type:             pe-agent
+ml-wls2:
+  public_ip:        '10.10.10.31'
+  cpucount:         2
+  type:             masterless
+pe-wls2:
+  public_ip:        '10.10.10.31'
+  cpucount:         2
+  type:             pe-agent
