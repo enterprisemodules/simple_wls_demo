@@ -25,7 +25,6 @@ class profile::wls::server(
     os_group            => $profile::wls::os_group,
     download_dir        => '/data/install',
     log_dir             => '/var/log/weblogic',
-    log_output          => false,
     use_ssh             => false,
     domain_pack_dir     => '/vagrant',
     adminserver_address => $profile::wls::adminserver_address,

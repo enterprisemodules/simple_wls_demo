@@ -20,7 +20,6 @@ class profile::wls::software(
     os_group             => $profile::wls::os_group,
     download_dir         => $profile::download_dir,
     source               => $profile::source_dir,
-    remote_file          => true,
   }
   contain ::wls_install::software
 }

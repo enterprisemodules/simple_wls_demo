@@ -7,11 +7,11 @@ wls_oracle_base_home_dir:                     /opt/oracle
 wls_middleware_home_dir:                      "%{lookup('wls_oracle_base_home_dir')}/middleware12"
 wls_weblogic_home_dir:                        "%{lookup('wls_oracle_base_home_dir')}/middleware12/wlserver"
 wls_domains_dir:                              "%{lookup('wls_oracle_base_home_dir')}/domains"
-wls_jdk_home_dir:                             /usr/java/jdk1.8.0_141
+wls_jdk_home_dir:                             /usr/java/jdk1.8.0_152
 wls_apps_dir:                                 "%{lookup('wls_oracle_base_home_dir')}/applications"
 wls_os_user:                                  oracle
 wls_os_group:                                 dba
-wls_version:                                  12212
+wls_version:                                  12213
 wls_weblogic_user:                            weblogic
 wls_download_dir:                             /data/install
 #
@@ -28,14 +28,14 @@ profile::download_dir:                        /data/install
 profile::source_dir:                          /vagrant/modules/software/files
 
 profile::wls::software::fmw_infra:            false
-profile::wls::software::filename:             fmw_12.2.1.2.0_wls.jar
+profile::wls::software::filename:             fmw_12.2.1.3.0_wls.jar
 profile::wls::software::software_source:      "%{lookup('profile::source_dir')}"
 profile::wls::weblogic_home_dir:              "%{lookup('wls_weblogic_home_dir')}"
 #
 # Java settings
 #
-profile::java::version:                       8u141
-profile::java::full_version:                  jdk1.8.0_141
+profile::java::version:                       8u152
+profile::java::full_version:                  jdk1.8.0_152
 profile::java::cryptography_extension_file:   jce_policy-8.zip
 profile::java::source_path:                   "%{lookup('profile::source_dir')}"
 

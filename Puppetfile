@@ -18,9 +18,9 @@ mod 'saz-timezone',
 #
 # The Enterprise Modules Oracle specific Modules
 #
-mod 'enterprisemodules-wls_config',   '3.0.17'
-mod 'enterprisemodules-wls_install',  '2.1.11'
-mod 'enterprisemodules-easy_type',    '2.3.3'
+mod 'enterprisemodules-wls_config',   '3.0.22'
+mod 'enterprisemodules-wls_install',  '3.0.5'
+mod 'enterprisemodules-easy_type',    '2.3.14'
 #
 # Modules that are part of the control repo. R10K doesn't need to touch these
 #

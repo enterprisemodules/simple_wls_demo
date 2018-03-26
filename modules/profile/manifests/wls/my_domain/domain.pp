@@ -60,6 +60,8 @@ class profile::wls::my_domain::domain(
   #
   -> wls_install::nodemanager{"nodemanager for ${domain_name}":
     domain_name         => $domain_name,
+    version             => $profile::wls::version,
+    log_dir             => $wls_log_dir,
     nodemanager_address => $profile::wls::nodemanager_address,
     sleep               => 25,
   }
@@ -142,6 +144,7 @@ class profile::wls::my_domain::domain(
   ->wls_install::support::nodemanagerautostart{'my_domain_nodemanager':
     version     => $profile::wls::version,
     wl_home     => $profile::wls::weblogic_home_dir,
+    log_dir     => $wls_log_dir,
     user        => $profile::wls::os_user,
     domain      => $domain_name,
     domain_path => "${profile::wls::domains_dir}/${domain_name}",
@@ -162,7 +165,6 @@ class profile::wls::my_domain::domain(
     os_user             => $profile::wls::os_user,
     os_group            => $profile::wls::os_group,
     download_dir        => '/data/install',
-    log_output          => false,       # Use true when you are debugging
   }
   #
   # For now we will put the file in the vagrant directory for sharing. In a real enterprise environment
