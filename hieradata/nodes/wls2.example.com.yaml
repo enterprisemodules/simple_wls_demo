@@ -1,5 +1,4 @@
 ---
 role: role::wls::server
 
-profile::wls::server::domain_name: my_domain
-domain_adminserver_address:        wls1.example.com
+wls_profile::adminserver_address: wls1.example.com

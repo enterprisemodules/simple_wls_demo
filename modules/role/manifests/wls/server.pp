@@ -1,15 +1,9 @@
 class role::wls::server()
 {
-  contain ::profile::base::config
-  contain ::profile::base::hosts
-  contain ::profile::wls::os
-  contain ::profile::java
-  contain ::profile::wls::software
-  contain ::profile::wls::server
+  contain ::profile::base
+  contain ::wls_profile::node
 
-  Class['::profile::base::hosts']
-  -> Class['::profile::wls::os']
-  -> Class['::profile::java']
-  -> Class['::profile::wls::software']
-  -> Class['::profile::wls::server']
+  Class['::profile::base'] -> Class['::wls_profile::node']
 }
+
+ 
