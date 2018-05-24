@@ -28,3 +28,5 @@ modules/timezone
 /modules/augeasproviders_core
 /modules/augeasproviders_sysctl
 /modules/echo
+.DS_Store
+/modules/firewalld

@@ -65,7 +65,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.synced_folder '.', '/vagrant', type: :virtualbox
       case server['type']
       when 'masterless'
-        srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        srv.vm.box = 'enterprisemodules/centos-7.5-x86_64-nocm' unless server['box']
         config.trigger.after :up do
           #
           # Fix hostnames because Vagrant mixes it up.
