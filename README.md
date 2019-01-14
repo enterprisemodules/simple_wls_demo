@@ -37,5 +37,8 @@ The software must be placed in `modules/software/files`. It must contain the nex
 ### Oracle WebLogic 12.2.1.2
 - fmw_12.2.1.2.0_wls.jar
 
+### Jce Policy 8
+- jce_policy-8.zip
+
 You can download this file from
 [here](http://support.oracle.com)
