@@ -35,7 +35,7 @@ The software must be placed in `modules/software/files`. It must contain the nex
 - puppet-enterprise-2017.2.3-el-7-x86_64-x86_64.tar.gz (Extracted tar)
 
 ### Oracle WebLogic 12.2.1.2
-- fmw_12.2.1.2.0_wls.jar
+- fmw_12.2.1.3.0_wls.jar
 
 ### Jce Policy 8
 - jce_policy-8.zip
