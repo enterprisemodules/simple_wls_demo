@@ -20,3 +20,7 @@ pe-wls2:
   public_ip:        '10.10.10.31'
   cpucount:         2
   type:             pe-agent
+ml-ords:
+  public_ip:        '10.10.10.32'
+  cpucount:         2
+  type:             masterless

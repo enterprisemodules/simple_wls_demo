@@ -12,7 +12,7 @@ profile::base::hosts::list:
     ip: 10.10.10.31
     host_aliases:
       - wls2
-
-wls_profile::domain_name:         dom0
-wls_profile::cluster_name:        clus
-wls_profile::weblogic_password:   S3cr3tstuff!
+  ords.example.com:
+    ip: 10.10.10.32
+    host_aliases:
+      - ords
