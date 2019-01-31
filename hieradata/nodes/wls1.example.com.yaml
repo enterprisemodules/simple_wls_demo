@@ -1,6 +1,6 @@
 ---
 
-role: role::wls::admin_server
+role: role::wls::ords_server
 
 wls_profile::::servers:
   wls1.example.com:
