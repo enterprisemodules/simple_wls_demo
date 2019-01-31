@@ -1,8 +1,11 @@
 
 mod 'enterprisemodules-easy_type',          '2.4.4'
-mod 'enterprisemodules-wls_profile',        '0.1.3'
+mod 'enterprisemodules-ora_config',         '3.2.3'
+mod 'enterprisemodules-ora_install',        '4.1.2'
+mod 'enterprisemodules-ora_profile',        '0.8.1'
 mod 'enterprisemodules-wls_config',         '3.1.0'
 mod 'enterprisemodules-wls_install',        '3.0.5'
+mod 'enterprisemodules-wls_profile',        '0.1.3'
 mod 'ipcrm-echo',                           '0.1.5'
 mod 'puppetlabs-stdlib',                    '4.25.0'
 mod 'herculesteam-augeasproviders_core',    '2.1.4'
