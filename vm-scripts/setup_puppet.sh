@@ -13,6 +13,8 @@ if [ -e /vagrant/.netrc ]
 then
   cp /vagrant/.netrc ~
 fi
+
+# Line responsible for module install
 /opt/puppetlabs/puppet/bin/r10k puppetfile install > /dev/null # 2>&1
 
 #
