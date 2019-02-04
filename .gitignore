@@ -27,6 +27,7 @@ modules/timezone
 /modules/wls_profile
 /modules/augeasproviders_core
 /modules/augeasproviders_sysctl
+/modules/ora_profile
 /modules/echo
 .DS_Store
 /modules/firewalld
