@@ -1,4 +1,3 @@
-
 mod 'enterprisemodules-easy_type',          '2.4.4'
 mod 'enterprisemodules-ora_config',         '3.2.3'
 mod 'enterprisemodules-ora_install',        '4.1.2'
