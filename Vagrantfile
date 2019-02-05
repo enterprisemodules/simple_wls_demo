@@ -67,6 +67,7 @@ Vagrant.configure('2') do |config|
         config.winrm.retry_limit = 10
       end
       srv.vm.synced_folder '.', '/vagrant', type: :virtualbox
+      srv.vm.network "private_network", ip: "192.168.56.3"
       case server['type']
       when 'masterless'
         # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box'] <- solves startup issues
