@@ -44,7 +44,7 @@ pe_puppet_group_id = 993
 #
 # Choose your version of Puppet Enterprise
 #
-puppet_installer   = 'puppet-enterprise-2018.1.3-el-7-x86_64/puppet-enterprise-installer'
+puppet_installer = 'puppet-enterprise-2018.1.3-el-7-x86_64/puppet-enterprise-installer'
 
 Vagrant.configure('2') do |config|
   link_software
