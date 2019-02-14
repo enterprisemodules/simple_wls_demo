@@ -69,7 +69,8 @@ Vagrant.configure('2') do |config|
       srv.vm.synced_folder '.', '/vagrant', type: :virtualbox
       case server['type']
       when 'masterless'
-        srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        srv.vm.box = 'centos/7' unless server['box']
         config.trigger.after :up do |trigger|
           #
           # Fix hostnames because Vagrant mixes it up.
@@ -78,7 +79,7 @@ Vagrant.configure('2') do |config|
             trigger.run_remote = {inline: <<~EOD}
               cat > /etc/hosts<< "EOF"
               127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-              192.168.253.10 master.example.com puppet master
+              192.168.253.10 wlsmaster.example.com puppet master
               #{server['public_ip']} #{hostname}.example.com #{hostname}
               EOF
               bash /vagrant/vm-scripts/install_puppet.sh
@@ -104,7 +105,8 @@ Vagrant.configure('2') do |config|
         end
 
       when 'pe-master'
-        srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        srv.vm.box = 'centos/7' unless server['box']
         srv.vm.synced_folder '.', '/vagrant', owner: pe_puppet_user_id, group: pe_puppet_group_id
         srv.vm.provision :shell, inline: "/vagrant/modules/software/files/#{puppet_installer} -c /vagrant/pe.conf -y"
         #
@@ -132,7 +134,8 @@ Vagrant.configure('2') do |config|
         srv.vm.provision :shell, inline: 'service pe-puppetserver restart'
         srv.vm.provision :shell, inline: 'puppet agent -t || true'
       when 'pe-agent'
-        srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        #srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
+        srv.vm.box = 'centos/7' unless server['box']
         #
         # First we need to instal the agent.
         #
@@ -144,7 +147,7 @@ Vagrant.configure('2') do |config|
             trigger.run_remote = {inline: <<~EOD}
               cat > /etc/hosts<< "EOF"
               127.0.0.1 localhost.localdomain localhost4 localhost4.localdomain4
-              192.168.253.10 master.example.com puppet master
+              192.168.253.10 wlsmaster.example.com puppet master
               #{server['public_ip']} #{hostname}.example.com #{hostname}
               EOF
               curl -k https://master.example.com:8140/packages/current/install.bash | sudo bash
@@ -163,7 +166,7 @@ Vagrant.configure('2') do |config|
             else
               trigger.run_remote = {inline: <<~EOD}
               Copy-Item -Path c:\\vagrant\\vm-scripts\\windows-hosts -Destination c:\\Windows\\System32\\Drivers\\etc\\hosts
-              [Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; $webClient = New-Object System.Net.WebClient; $webClient.DownloadFile('https://master.example.com:8140/packages/current/install.ps1', 'install.ps1');.\\install.ps1
+              [Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; $webClient = New-Object System.Net.WebClient; $webClient.DownloadFile('https://wlsmaster.example.com:8140/packages/current/install.ps1', 'install.ps1');.\\install.ps1
               iex 'puppet resource service puppet ensure=stopped'
               iex 'puppet agent -t'
               EOD
@@ -174,8 +177,8 @@ Vagrant.configure('2') do |config|
         # vb.gui = true
         vb.cpus = server['cpucount'] || 1
         vb.memory = server['ram'] || 4096
-        vb.customize ['modifyvm', :id, '--ioapic', 'on']
-        vb.customize ['modifyvm', :id, '--name', name]
+#        vb.customize ['modifyvm', :id, '--ioapic', 'on']
+#        vb.customize ['modifyvm', :id, '--name', name]
         if server['virtualboxorafix'] == 'enable'
           vb.customize ['setextradata', :id, 'VBoxInternal/CPUM/HostCPUID/Cache/Leaf', '0x4']
           vb.customize ['setextradata', :id, 'VBoxInternal/CPUM/HostCPUID/Cache/SubLeaf', '0x4']
