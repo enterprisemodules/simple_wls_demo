@@ -65,12 +65,12 @@ Vagrant.configure('2') do |config|
         config.winrm.ssl_peer_verification = false
         config.winrm.retry_delay = 60
         config.winrm.retry_limit = 10
-        end
+      end
       srv.vm.synced_folder '.', '/vagrant', type: :virtualbox
       case server['type']
       when 'masterless'
-        # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
-        srv.vm.box = 'centos/7' unless server['box']
+        # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box'] <- solves startup issues
+        srv.vm.box = 'centos/7' unless server['box'] # Used the distro default instead
         config.trigger.after :up do |trigger|
           #
           # Fix hostnames because Vagrant mixes it up.
@@ -79,7 +79,7 @@ Vagrant.configure('2') do |config|
             trigger.run_remote = {inline: <<~EOD}
               cat > /etc/hosts<< "EOF"
               127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-              192.168.253.10 wlsmaster.example.com puppet master
+              192.168.253.10 wlsmaster.example.com puppet master # wlsmaster is what the module looks for
               #{server['public_ip']} #{hostname}.example.com #{hostname}
               EOF
               bash /vagrant/vm-scripts/install_puppet.sh
@@ -105,8 +105,8 @@ Vagrant.configure('2') do |config|
         end
 
       when 'pe-master'
-        # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
-        srv.vm.box = 'centos/7' unless server['box']
+        # srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box'] <- solves startup issues
+        srv.vm.box = 'centos/7' unless server['box'] # Used the distro default instead
         srv.vm.synced_folder '.', '/vagrant', owner: pe_puppet_user_id, group: pe_puppet_group_id
         srv.vm.provision :shell, inline: "/vagrant/modules/software/files/#{puppet_installer} -c /vagrant/pe.conf -y"
         #
@@ -134,8 +134,8 @@ Vagrant.configure('2') do |config|
         srv.vm.provision :shell, inline: 'service pe-puppetserver restart'
         srv.vm.provision :shell, inline: 'puppet agent -t || true'
       when 'pe-agent'
-        #srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box']
-        srv.vm.box = 'centos/7' unless server['box']
+        #srv.vm.box = 'enterprisemodules/centos-7.3-x86_64-nocm' unless server['box'] <- solves startup issues
+        srv.vm.box = 'centos/7' unless server['box'] # Used the distro default instead
         #
         # First we need to instal the agent.
         #
@@ -147,7 +147,7 @@ Vagrant.configure('2') do |config|
             trigger.run_remote = {inline: <<~EOD}
               cat > /etc/hosts<< "EOF"
               127.0.0.1 localhost.localdomain localhost4 localhost4.localdomain4
-              192.168.253.10 wlsmaster.example.com puppet master
+              192.168.253.10 wlsmaster.example.com puppet master # wlamaster is what the module looks for
               #{server['public_ip']} #{hostname}.example.com #{hostname}
               EOF
               curl -k https://master.example.com:8140/packages/current/install.bash | sudo bash
