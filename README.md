@@ -32,7 +32,7 @@ You must always use the specified order:
 The software must be placed in `modules/software/files`. It must contain the next files:
 
 ### Puppet Enterprise
-- puppet-enterprise-2017.2.3-el-7-x86_64-x86_64.tar.gz (Extracted tar)
+- puppet-enterprise-2018.1.3-el-7-x86_64-x86_64.tar.gz (Extracted tar)
 
 ### JDK 1.5.2
 - jdk-8u152-linux-x64.tar.gz
