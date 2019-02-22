@@ -6,7 +6,7 @@
 
 echo 'Installing required gems'
 
-#/opt/puppetlabs/puppet/bin/gem install r10k --no-rdoc --no-ri > /dev/null 2>&1
+/opt/puppetlabs/puppet/bin/gem install r10k --no-rdoc --no-ri > /dev/null # 2>&1
 
 
 
