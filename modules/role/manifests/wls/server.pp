@@ -10,4 +10,3 @@ class role::wls::server()
   # notice("run wls_install ords")
 }
 
-
