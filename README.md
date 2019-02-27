@@ -31,6 +31,13 @@ You must always use the specified order:
 
 The software must be placed in `modules/software/files`. It must contain the next files:
 
+## Vagrant plugins
+
+Below are two required vagrant plugins to perform the setup build:
+
+- vagrant-triggers
+- vagrant-vbguest
+
 ### Puppet Enterprise
 - puppet-enterprise-2018.1.3-el-7-x86_64-x86_64.tar.gz (Extracted tar)
 
