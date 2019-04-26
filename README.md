@@ -1,3 +1,4 @@
+[![Enterprise Modules](https://raw.githubusercontent.com/enterprisemodules/public_images/master/banner1.jpg)](https://www.enterprisemodules.com)
 # Demo Puppet WebLogic implementation
 
 This repo contains a demonstration of a Oracle WebLogic installation. It's purpose is to help you guide through an initial installation of an Oracle WebLogic node with Puppet. This demo is ready for Puppet 4 and for Puppet 5.
