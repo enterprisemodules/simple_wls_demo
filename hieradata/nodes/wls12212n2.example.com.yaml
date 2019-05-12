@@ -1,0 +1,6 @@
+---
+role: role::wls::server
+
+wls_profile::weblogic::wls_software::file_name:   fmw_12.2.1.2.0_wls.jar
+wls_profile::weblogic_version:                    12212
+wls_profile::adminserver_address:                 wls12212n1.example.com

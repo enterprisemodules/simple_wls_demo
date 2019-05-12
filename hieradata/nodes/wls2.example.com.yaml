@@ -1,4 +1,0 @@
----
-role: role::wls::server
-
-wls_profile::adminserver_address: wls1.example.com

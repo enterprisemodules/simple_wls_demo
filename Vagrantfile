@@ -2,8 +2,72 @@ require 'yaml'
 
 VAGRANTFILE_API_VERSION = '2'.freeze
 
+VALID_KEYS = [
+  'public_ip',
+  'private_ip',
+  'domain_name',
+  'additional_hosts',
+  'box',
+  'puppet_master',
+  'disks',
+  'cluster',
+  'puppet_installer',
+  'required_plugins',
+  'software_files',
+  'protocol',
+  'type',
+  'cpucount',
+  'ram',
+  'virtualboxorafix',
+  'needs_storage',
+]
+
+class FilesNotFoundError < Vagrant::Errors::VagrantError
+  def error_message
+    "Missing software files"
+  end
+end
+
+class InvalidDefinition < Vagrant::Errors::VagrantError
+  def error_message
+    "Invalid definition in server.yaml"
+  end
+end
+
+def validate_definitions(content)
+  errors = []
+  content.each do | key, values|
+    errors << "Node #{key} needs and 'ml-' prefix for masterless or an 'pe-' prefix for Puppset agent" if key[0,3] != 'ml-' && key[0,3] != 'pe-'
+    unknown_keys = values.keys - VALID_KEYS
+    next if unknown_keys.empty?
+    errors << "Node #{key} contains unkown entries #{unknown_keys.join(', ')}"
+  end
+  errors
+end
+
+def servers
+  content = YAML.load_file("#{File.dirname(__FILE__)}/servers.yaml")
+  defaults    = content.delete('defaults') || {}
+  pe_defaults = content.delete('pe-defaults') || {}
+  ml_defaults = content.delete('ml-defaults') || {}
+  content.each do | key, values|
+    case key[0,3]
+    when 'ml-'
+      content[key] = defaults.merge(ml_defaults).merge(values)
+    when 'pe-'
+      content[key] = defaults.merge(pe_defaults).merge(values)
+    end
+  end
+  errors = validate_definitions(content)
+  if errors.any?
+    puts "servers.yaml contains following errors:"
+    errors.each {|e| puts "- #{e}\n"}
+    raise InvalidDefinition
+  end
+  content
+end
+
 # Read YAML file with box details
-servers            = YAML.load_file('servers.yaml')
 pe_puppet_user_id  = 495
 pe_puppet_group_id = 496
 vagrant_root       = File.dirname(__FILE__)
@@ -19,7 +83,7 @@ def masterless_setup(config, server, srv, hostname)
       trigger.run_remote = {inline: <<~EOD}
         cat > /etc/hosts<< "EOF"
         127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-        #{server['public_ip']} #{hostname}.example.com #{hostname}
+        #{server['public_ip']} #{hostname}.#{server['domain_name']} #{hostname}
         #{server['additional_hosts'] ? server['additional_hosts'] : ''}
         EOF
         bash /vagrant/vm-scripts/install_puppet.sh
@@ -49,7 +113,6 @@ def masterless_setup(config, server, srv, hostname)
 end
 
 def masterless_windows_setup(config, server, srv, hostname)
-  srv.vm.box = 'peru/windows-server-2016-standard-x64-eval' unless server['box']
   srv.vm.hostname = "#{hostname}"
   srv.vm.provision :shell, inline: <<~EOD
   cd c:\\vagrant\\vm-scripts
@@ -70,7 +133,7 @@ def raw_setup(config, server, srv, hostname)
       trigger.run_remote = {inline: <<~EOD}
         cat > /etc/hosts<< "EOF"
         127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-        #{server['public_ip']} #{hostname}.example.com #{hostname}
+        #{server['public_ip']} #{hostname}.#{server['domain_name']} #{hostname}
         #{server['additional_hosts'] ? server['additional_hosts'] : ''}
         EOF
         bash /vagrant/vm-scripts/setup_puppet_raw.sh
@@ -103,7 +166,7 @@ def puppet_master_setup(config, srv, server, puppet_installer, pe_puppet_user_id
   # For this vagrant setup, we make sure all nodes in the domain examples.com are autosigned. In production
   # you'dd want to explicitly confirm every node.
   #
-  srv.vm.provision :shell, inline: "echo '*.example.com' > /etc/puppetlabs/puppet/autosign.conf"
+  srv.vm.provision :shell, inline: "echo '*.#{server['domain_name']}' > /etc/puppetlabs/puppet/autosign.conf"
   srv.vm.provision :shell, inline: "echo '*.local' >> /etc/puppetlabs/puppet/autosign.conf"
   srv.vm.provision :shell, inline: "echo '*.home' >> /etc/puppetlabs/puppet/autosign.conf"
   #
@@ -137,10 +200,10 @@ def puppet_agent_setup(config, server, srv, hostname)
       trigger.run_remote = {inline: <<~EOD}
         cat > /etc/hosts<< "EOF"
         127.0.0.1 localhost.localdomain localhost4 localhost4.localdomain4
-        #{server['public_ip']} #{hostname}.example.com #{hostname}
+        #{server['public_ip']} #{hostname}.#{server['domain_name']} #{hostname}
         #{server['additional_hosts'] ? server['additional_hosts'] : ''}
         EOF
-        curl -k https://master.example.com:8140/packages/current/install.bash | sudo bash
+        curl -k https://#{server['puppet_master']}.#{server['domain_name']}:8140/packages/current/install.bash | sudo bash
         #
         # The agent installation also automatically start's it. In production, this is what you want. For now we
         # want the first run to be interactive, so we see the output. Therefore, we stop the agent and wait
@@ -156,7 +219,7 @@ def puppet_agent_setup(config, server, srv, hostname)
       else
         trigger.run_remote = {inline: <<~EOD}
         Copy-Item -Path c:\\vagrant\\vm-scripts\\windows-hosts -Destination c:\\Windows\\System32\\Drivers\\etc\\hosts
-        [Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; $webClient = New-Object System.Net.WebClient; $webClient.DownloadFile('https://wlsmaster.example.com:8140/packages/current/install.ps1', 'install.ps1');.\\install.ps1
+        [Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; $webClient = New-Object System.Net.WebClient; $webClient.DownloadFile('https://#{server['puppet_master']}.#{server['domain_name']}:8140/packages/current/install.ps1', 'install.ps1');.\\install.ps1
         iex 'puppet resource service puppet ensure=stopped'
         iex 'puppet agent -t'
         EOD
@@ -282,11 +345,21 @@ def plugin_check(plugin_name)
 end
 
 # Check if all required software files from servers.yaml are present in repo.
-def local_software_file_check(config, file_name)
-  config.trigger.after :up do |trigger|
-    file_path = Dir.pwd + "/modules/software/files/#{file_name}"
-    unless File.exist?(file_path) # returns true for driectories
-      raise "Missing software file: #{file_name}\nPlease add file to the: ./modules/software/files/"
+def local_software_file_check(config, vagrant_root, file_names)
+  config.trigger.before [:up, :reload, :provision] do |trigger|
+    trigger.ruby do |env, machine|
+      files_found = true
+      file_names.each do |file_name|
+        file_path = "#{vagrant_root}/modules/software/files/#{file_name}"
+        unless File.exist?(file_path) # returns true for directories
+          files_found = false
+          env.ui.error "Missing software file: #{file_name}"
+        end
+      end
+      if not files_found
+          env.ui.error "Please add missing file(s) to the: ./modules/software/files/ directory."
+          raise FilesNotFoundError
+      end
     end
   end
 end
@@ -296,7 +369,6 @@ end
 #
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.insert_key = false
-
   servers.each do |name, server|
     # Fetch puppet installer version if it is present
     puppet_installer = server['puppet_installer']
@@ -312,14 +384,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         #
         # Perform software checks before main setup
         #
-        server['software_files'].each { |name| local_software_file_check(config, name) } if server['software_files']
-
-        if puppet_installer
-          #
-          # Perform puppet installer check before main setup
-          #
-          local_software_file_check(config, puppet_installer) # Check if installer folder is present
-        end
+        local_software_file_check(config, vagrant_root, server['software_files']) if server['software_files']
+        local_software_file_check(config, vagrant_root, [puppet_installer]) if puppet_installer # Check if installer folder is present
       end
 
       srv.vm.communicator = server['protocol'] || 'ssh'
@@ -327,7 +393,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       hostname            = name.split('-').last # First part contains type of node
 
       if srv.vm.communicator == 'ssh'
-        srv.vm.hostname = "#{hostname}.example.com"
+        srv.vm.hostname = "#{hostname}.#{server['domain_name']}"
       else
         srv.vm.hostname = "#{hostname}"
         config.winrm.ssl_peer_verification = false
@@ -357,6 +423,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         puppet_master_setup(config, srv, server, puppet_installer, pe_puppet_user_id, pe_puppet_group_id, hostname)
       when 'pe-agent'
         puppet_agent_setup(config, server, srv, hostname)
+      begin
+        "#{server['type']} is invalid."
+      rescue => exception
+        
+      else
+        
+      ensure
+        
+      end
       end
 
       config.vm.provider :virtualbox do |vb|

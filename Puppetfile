@@ -1,8 +1,8 @@
 
-mod 'enterprisemodules-easy_type',          '2.4.4'
-mod 'enterprisemodules-wls_profile',        '0.1.3'
-mod 'enterprisemodules-wls_config',         '3.1.0'
-mod 'enterprisemodules-wls_install',        '3.0.5'
+mod 'enterprisemodules-easy_type',          '2.10.3'
+mod 'enterprisemodules-wls_profile',        '0.3.1'
+mod 'enterprisemodules-wls_config',         '3.4.1'
+mod 'enterprisemodules-wls_install',        '3.3.0'
 mod 'ipcrm-echo',                           '0.1.5'
 mod 'puppetlabs-stdlib',                    '4.25.0'
 mod 'herculesteam-augeasproviders_core',    '2.1.4'

@@ -4,14 +4,22 @@ profile::base::hosts::list:
     host_aliases:
       - wlsmaster
       - puppet
-  wls1.example.com:
-    ip: 10.10.10.30
+  wls12212n1.example.com:
+    ip: 10.10.12.30
     host_aliases:
-      - wls1
-  wls2.example.com:
-    ip: 10.10.10.31
+      - wls12212n1
+  wls12212n2.example.com:
+    ip: 10.10.12.31
     host_aliases:
-      - wls2
+      - wls12212n2
+  wls12213n1.example.com:
+    ip: 10.10.13.30
+    host_aliases:
+      - wls12213n1
+  wls12213n2.example.com:
+    ip: 10.10.13.31
+    host_aliases:
+      - wls12213n2
 
 wls_profile::domain_name:         dom0
 wls_profile::cluster_name:        clus
