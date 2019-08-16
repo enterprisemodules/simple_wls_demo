@@ -88,7 +88,7 @@ def masterless_setup(config, server, srv, hostname)
         EOF
         bash /vagrant/vm-scripts/install_puppet.sh
         bash /vagrant/vm-scripts/setup_puppet.sh
-        /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp || true
+        /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp
       EOD
     else # Windows
       trigger.run_remote = {inline: <<~EOD}
@@ -106,7 +106,7 @@ def masterless_setup(config, server, srv, hostname)
   config.trigger.after :provision do |trigger|
     if srv.vm.communicator == 'ssh'
       trigger.run_remote = {
-        inline: "puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp || true"
+        inline: "puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp"
       }
     end
   end
@@ -137,7 +137,7 @@ def raw_setup(config, server, srv, hostname)
         #{server['additional_hosts'] ? server['additional_hosts'] : ''}
         EOF
         bash /vagrant/vm-scripts/setup_puppet_raw.sh
-        /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp || true
+        /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp
       EOD
     else # Windows
       trigger.run_remote = {inline: <<~EOD}
@@ -153,7 +153,7 @@ def raw_setup(config, server, srv, hostname)
   config.trigger.after :provision do |trigger|
     if srv.vm.communicator == 'ssh'
       trigger.run_remote = {
-        inline: "puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp || true"
+        inline: "puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp"
       }
     end
   end

@@ -1,0 +1,27 @@
+---
+#
+# Include the shared gitlab CI definitions
+#
+include:
+  - project: 'enterprisemodules/gitlab_ci'
+    file: 'gitlab-ci.yml'
+
+wls12213n1_demo_check:
+  extends: .demo_check
+  variables:
+    server: ml-wls12213n1
+  before_script:
+    - mkdir -p modules/software/files
+    - cp ~/software/jdk-8u152-linux-x64.tar.gz modules/software/files
+    - cp ~/software/fmw_12.2.1.3.0_wls.jar modules/software/files
+    - cp ~/software/jce_policy-8.zip modules/software/files
+
+wls12212n1_demo_check:
+  extends: .demo_check
+  variables:
+    server: ml-wls12212n1
+  before_script:
+    - mkdir -p modules/software/files
+    - cp ~/software/jdk-8u152-linux-x64.tar.gz modules/software/files
+    - cp ~/software/fmw_12.2.1.2.0_wls.jar modules/software/files
+    - cp ~/software/jce_policy-8.zip modules/software/files
