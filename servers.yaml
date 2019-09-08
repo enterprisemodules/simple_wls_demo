@@ -5,9 +5,6 @@
 defaults:
   domain_name:     example.com
   cpucount:         1
-  additional_hosts: |
-    127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-    192.168.253.10 wlsmaster.example.com puppet master
   box:              enterprisemodules/centos-7.3-x86_64-nocm
   virtualboxorafix: enable
 #
