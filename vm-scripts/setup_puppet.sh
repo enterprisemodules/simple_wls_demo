@@ -1,24 +1,10 @@
 #
-# Install R10K. We need this to download the correct set of puppet modules
-#
-echo 'Installing required gems'
-/opt/puppetlabs/puppet/bin/gem install r10k --no-rdoc --no-ri > /dev/null # 2>&1
-
-echo 'Installing required puppet modules'
-cd /vagrant
-#
-# Copy netrc file if it exists
-#
-if [ -e /vagrant/.netrc ]
-then
-  cp /vagrant/.netrc ~
-fi
-/opt/puppetlabs/puppet/bin/r10k puppetfile install > /dev/null 2>&1
-
-#
 # Setup hiera search and backend. We need this to config our systems
 #
 echo 'Setting up hiera directories'
+cd /vagrant
+mkdir -p /etc/puppetlabs/code/environments/production
+
 dirname=/etc/puppetlabs/code/environments/production/hieradata
 if [ -d $dirname ]; then
   rm -rf $dirname
@@ -48,3 +34,37 @@ else
   rm -f $dirname
 fi
 ln -sf /vagrant/manifests /etc/puppetlabs/code/environments/production
+
+if [[ "$OSTYPE" == "solaris"* ]]; then
+  cd /vagrant/modules
+  rm -rf jdksolaris
+  git clone https://github.com/enterprisemodules/biemond-jdksolaris.git jdksolaris
+  puppet module install enterprisemodules-easy_type --force
+  puppet module install enterprisemodules-wls_profile --force
+  puppet module install enterprisemodules-wls_config --force
+  puppet module install enterprisemodules-wls_install --force
+  puppet module install puppet-archive --force
+  puppet module install ipcrm-echo --force
+  puppet module install puppetlabs-stdlib --force
+  puppet module install fiddyspence-sleep --force
+elif [[ "$OSTYPE" == "linux"* ]]; then
+  #
+  # Install R10K. We need this to download the correct set of puppet modules
+  #
+  echo 'Installing required gems'
+  /opt/puppetlabs/puppet/bin/gem install r10k --no-rdoc --no-ri > /dev/null # 2>&1
+
+  echo 'Installing required puppet modules'
+  cd /vagrant
+  #
+  # Copy netrc file if it exists
+  #
+  if [ -e /vagrant/.netrc ]
+  then
+    cp /vagrant/.netrc ~
+  fi
+  /opt/puppetlabs/puppet/bin/r10k puppetfile install > /dev/null 2>&1
+else
+    echo "ERROR: Unsupported OS"
+    exit 1
+fi

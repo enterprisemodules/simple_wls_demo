@@ -30,3 +30,4 @@ modules/timezone
 /modules/echo
 .DS_Store
 /modules/firewalld
+/modules/jdksolaris

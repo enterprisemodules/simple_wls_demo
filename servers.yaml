@@ -61,6 +61,14 @@ ml-wls12213n2:
     - jce_policy-8.zip
 
 
+ml-wls12213soln1:
+  public_ip:        '10.10.13.32'
+  box:              MartijnDwars/solaris11_4
+  software_files:
+    - jdk-8u152-solaris-x64.tar.gz
+    - fmw_12.2.1.3.0_wls.jar
+
+
 pe-wls12213n1:
   public_ip:        '10.10.12.30'
   software_files:

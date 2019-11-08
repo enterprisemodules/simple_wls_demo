@@ -6,8 +6,12 @@ class profile::base::packages()
   $required_package = [
   ]
 
-  package{ $required_package:
-    ensure => 'installed',
+  case $::kernel {
+    'Linux': {
+      package{ $required_package:
+        ensure => 'installed',
+      }
+    }
+    default: {}
   }
-
 }

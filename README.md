@@ -14,6 +14,7 @@ For WebLogic 12.2.1.3 the example nodes are:
 
 - (ml|pe)-wls12213n1 (first node in WebLogic cluster and Admin Server)
 - (ml|pe)-wls12213n2 (first node in WebLogic cluster and Admin Server)
+- ml-wls12213soln1.example.com for a solaris node 
 
 ## Starting the nodes masterless
 
@@ -49,10 +50,14 @@ For WebLogic 12.2.1.2:
 - fmw_12.2.1.2.0_wls.jar
 - jce_policy-8.zip
 
-And for WebLogic 12.2.1.3:
+And for WebLogic 12.2.1.3 on Linux:
 - jdk-8u152-linux-x64.tar.gz
 - fmw_12.2.1.3.0_wls.jar
 - jce_policy-8.zip
+
+On Solaris you need:
+- jdk-8u152-solaris-x64.tar.gz
+- fmw_12.2.1.3.0_wls.jar
 
 You can download the file's from [here](http://support.oracle.com)
 

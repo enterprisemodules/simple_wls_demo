@@ -14,6 +14,7 @@ mod 'fiddyspence-sleep'
 mod 'saz-timezone'
 mod 'stm-debconf'
 mod 'crayfishx-firewalld'
+mod 'biemond-jdksolaris'
 #
 # Modules that are part of the control repo. R10K doesn't need to touch these
 #
