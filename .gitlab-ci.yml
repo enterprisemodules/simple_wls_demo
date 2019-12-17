@@ -6,6 +6,16 @@ include:
   - project: 'enterprisemodules/gitlab_ci'
     file: 'gitlab-ci.yml'
 
+wls12214n1_demo_check:
+  extends: .demo_check
+  variables:
+    server: ml-wls12214n1
+  before_script:
+    - mkdir -p modules/software/files
+    - cp ~/software/jdk-8u231-linux-x64.tar.gz modules/software/files
+    - cp ~/software/fmw_12.2.1.4.0_wls.jar modules/software/files
+    - cp ~/software/jce_policy-8.zip modules/software/files
+
 wls12213n1_demo_check:
   extends: .demo_check
   variables:

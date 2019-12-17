@@ -20,6 +20,14 @@ profile::base::hosts::list:
     ip: 10.10.13.31
     host_aliases:
       - wls12213n2
+  wls12214n1.example.com:
+    ip: 10.10.13.32
+    host_aliases:
+      - wls12214n1
+  wls12214n2.example.com:
+    ip: 10.10.13.33
+    host_aliases:
+      - wls12213n2
 
 wls_profile::domain_name:         dom0
 wls_profile::cluster_name:        clus
