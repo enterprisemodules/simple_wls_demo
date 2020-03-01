@@ -1,14 +1,20 @@
-#
-# Install correct puppet version
-#
-echo 'Installing puppet agent'
-if [[ "$OSTYPE" == "linux"* ]]; then
-    rpm -q puppet5-release || yum install -y --nogpgcheck https://yum.puppetlabs.com/puppet6/puppet6-release-el-7.noarch.rpm > /dev/null
-    rpm -q puppet-agent || yum install -y --nogpgcheck puppet-agent
-    rpm -q git || yum install -y git
-elif [[ "$OSTYPE" == "solaris"* ]]; then
-    pkg install puppet git
+if [ -f /var/log/install_puppet.done ]
+then
+  echo "Puppet already installed"
 else
-    echo "ERROR: Unsupported OS"
-    exit 1
+  #
+  # Install correct puppet version
+  #
+  if [ -f "/vagrant/puppet_version" ]; then
+    PACKAGE="puppet-agent-$(cat /vagrant/puppet_version)"
+  else
+    PACKAGE="puppet-agent"
+  fi
+  echo "Installing $PACKAGE"
+  rhel=$(awk -F'[ .]' 'NF==8{print $4} NF==9{print $7}' /etc/redhat-release)
+  yum install -y --nogpgcheck https://yum.puppetlabs.com/puppet6/puppet6-release-el-${rhel}.noarch.rpm > /dev/null
+  yum install -y --nogpgcheck $PACKAGE
+  rpm -q git || yum install -y --nogpgcheck git
+
+  touch /var/log/install_puppet.done
 fi

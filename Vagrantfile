@@ -3,6 +3,7 @@ require 'yaml'
 VAGRANTFILE_API_VERSION = '2'.freeze
 
 VALID_KEYS = [
+  'dhcp_fix',
   'public_ip',
   'private_ip',
   'domain_name',
@@ -154,128 +155,42 @@ def masterless_setup(config, server, srv, hostname)
   end
 end
 
-
-def raw_setup(config, server, srv, hostname)
-  config.trigger.after :up do |trigger|
-    #
-    # Fix hostnames because Vagrant mixes it up.
-    #
-    if srv.vm.communicator == 'ssh'
-      trigger.run_remote = {inline: <<~EOD}
-        cat > /etc/hosts<< "EOF"
-        127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
-        #{server['public_ip']} #{hostname}.#{server['domain_name']} #{hostname}
-        #{server['additional_hosts'] ? server['additional_hosts'] : ''}
-        EOF
-        bash /vagrant/vm-scripts/setup_puppet_raw.sh
-        /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp || true
-      EOD
-    else # Windows
-      trigger.run_remote = {inline: <<~EOD}
-        cd c:\\vagrant\\vm-scripts
-        .\\setup_puppet_raw.ps1
-        iex "& 'C:\\Program Files\\Puppet Labs\\Puppet\\bin\\puppet' resource service puppet ensure=stopped"
-        iex "& 'C:\\Program Files\\Puppet Labs\\Puppet\\bin\\puppet' apply c:\\vagrant\\manifests\\site.pp -t"
-      EOD
-    end
-  end
-
-  config.trigger.after :provision do |trigger|
-    if srv.vm.communicator == 'ssh'
-      trigger.run_remote = {
-        inline: "puppet apply /etc/puppetlabs/code/environments/production/manifests/site.pp || true"
-      }
-    end
-  end
-end
-
 def puppet_master_setup(config, srv, server, puppet_installer, pe_puppet_user_id, pe_puppet_group_id, hostname)
   srv.vm.synced_folder '.', '/vagrant', owner: pe_puppet_user_id, group: pe_puppet_group_id
-  srv.vm.provision :shell, inline: "/vagrant/modules/software/files/#{puppet_installer} -c /vagrant/pe.conf -y"
-  #
-  # For this vagrant setup, we make sure all nodes in the domain examples.com are autosigned. In production
-  # you'dd want to explicitly confirm every node.
-  #
-  srv.vm.provision :shell, inline: "echo '*.#{server['domain_name']}' > /etc/puppetlabs/puppet/autosign.conf"
-  srv.vm.provision :shell, inline: "echo '*.local' >> /etc/puppetlabs/puppet/autosign.conf"
-  srv.vm.provision :shell, inline: "echo '*.home' >> /etc/puppetlabs/puppet/autosign.conf"
-  #
-  # For now we stop the firewall. In the future we will add a nice puppet setup to the ports needed
-  # for Puppet Enterprise to work correctly.
-  #
-  srv.vm.provision :shell, inline: 'systemctl stop firewalld.service'
-  srv.vm.provision :shell, inline: 'systemctl disable firewalld.service'
-  #
-  # This script make's sure the vagrant paths's are symlinked to the places Puppet Enterprise looks for specific
-  # modules, manifests and hiera data. This makes it easy to change these files on your host operating system.
-  #
-  srv.vm.provision :shell, path: 'vm-scripts/setup_puppet.sh'
-  #
-  # Make sure all plugins are synced to the puppetserver before exiting and stating
-  # any agents
-  #
-  srv.vm.provision :shell, inline: 'service pe-puppetserver restart'
-  srv.vm.provision :shell, inline: 'puppet agent -t || true'
+
+  @provisioners << { shell: { inline: facter_overrides(server['custom_facts'], 'linux'),
+                              run: 'always' } } if server['custom_facts']
+  @provisioners << { shell: { inline: hosts_file(servers, 'linux') } }
+  @provisioners << { shell: { inline: "bash /vagrant/vm-scripts/install_puppet_server.sh #{puppet_installer} #{server['domain_name']}" } }
+  @provisioners << { puppet_server: { puppet_server: "#{server['puppet_master']}.#{server['domain_name']}",
+                                      options: "--test" } }
 end
 
 def puppet_agent_setup(config, server, srv, hostname)
-  #
-  # First we need to instal the agent.
-  #
-  config.trigger.after :up do |trigger|
-    #
-    # Fix hostnames because Vagrant mixes it up.
-    #
-    if srv.vm.communicator == 'ssh'
-      trigger.run_remote = {inline: <<~EOD}
-        cat > /etc/hosts<< "EOF"
-        127.0.0.1 localhost.localdomain localhost4 localhost4.localdomain4
-        #{server['public_ip']} #{hostname}.#{server['domain_name']} #{hostname}
-        #{server['additional_hosts'] ? server['additional_hosts'] : ''}
-        EOF
-        curl -k https://#{server['puppet_master']}.#{server['domain_name']}:8140/packages/current/install.bash | sudo bash
-        #
-        # The agent installation also automatically start's it. In production, this is what you want. For now we
-        # want the first run to be interactive, so we see the output. Therefore, we stop the agent and wait
-        # for it to be stopped before we start the interactive run
-        #
-        pkill -9 -f "puppet.*agent.*"
-        /opt/puppetlabs/puppet/bin/puppet agent -t; exit 0
-        #
-        # After the interactive run is done, we restart the agent in a normal way.
-        #
-        systemctl start puppet
-        EOD
-      else
-        trigger.run_remote = {inline: <<~EOD}
-        Copy-Item -Path c:\\vagrant\\vm-scripts\\windows-hosts -Destination c:\\Windows\\System32\\Drivers\\etc\\hosts
-        [Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; $webClient = New-Object System.Net.WebClient; $webClient.DownloadFile('https://#{server['puppet_master']}.#{server['domain_name']}:8140/packages/current/install.ps1', 'install.ps1');.\\install.ps1
-        iex 'puppet resource service puppet ensure=stopped'
-        EOD
-    end
+  if srv.vm.communicator == 'ssh'
+    @provisioners << { shell: { inline: facter_overrides(server['custom_facts'], 'linux'),
+                                run: 'always' } } if server['custom_facts']
+    @provisioners << { shell: { inline: hosts_file(servers, 'linux') } }
+    @provisioners << { shell: { inline: "bash /vagrant/vm-scripts/install_puppet_agent.sh #{server['puppet_master']}.#{server['domain_name']}" } }
+    @provisioners << { shell: { inline: 'systemctl stop puppet; pkill -9 -f "puppet.*agent.*"; true' } }
+    @provisioners << { puppet_server: { puppet_server: "#{server['puppet_master']}.#{server['domain_name']}",
+                                        puppet_node: "#{hostname}.#{server['domain_name']}",
+                                        options: "--test" } }
+    @provisioners << { shell: { inline: 'systemctl start puppet' } }
+  else
+    @provisioners << { shell: { inline: facter_overrides(server['custom_facts'], 'windows'),
+                                run: 'always' } } if server['custom_facts']
+    @provisioners << { shell: { inline: hosts_file(servers, 'windows') } }
+    @provisioners << { shell: { inline: %Q(Set-ExecutionPolicy Bypass -Scope Process -Force
+                                           [Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+                                           $webClient = New-Object System.Net.WebClient
+                                           $webClient.DownloadFile('https://#{server['puppet_master']}.#{server['domain_name']}:8140/packages/current/install.ps1', 'install.ps1')
+                                           .\\install.ps1
+                                           iex 'puppet resource service puppet ensure=stopped') } }
+    @provisioners << { puppet_server: { puppet_server: "#{server['puppet_master']}.#{server['domain_name']}",
+                                        puppet_node: "#{hostname}.#{server['domain_name']}",
+                                        options: "--test" } }
   end
-  config.trigger.after :provision do |trigger|
-    if srv.vm.communicator == 'ssh'
-      trigger.run_remote = {inline: <<~EOD}
-        #
-        # The agent installation also automatically start's it. In production, this is what you want. For now we
-        # want the first run to be interactive, so we see the output. Therefore, we stop the agent and wait
-        # for it to be stopped before we start the interactive run
-        #
-        pkill -9 -f "puppet.*agent.*"
-        /opt/puppetlabs/puppet/bin/puppet agent -t; exit 0
-        #
-        # After the interactive run is done, we restart the agent in a normal way.
-        #
-        systemctl start puppet
-        EOD
-    else
-      trigger.run_remote = {inline: <<~EOD}
-        iex 'puppet agent -t'
-      EOD
-    end
-  end
-
 end
 
 # Fix setup for Oracle applications
@@ -402,8 +317,8 @@ def plugin_check(plugin_name)
 end
 
 # Check if all required software files from servers.yaml are present in repo.
-def local_software_file_check(config, file_names)
-  config.trigger.before [:up, :reload, :provision] do |trigger|
+def local_software_file_check(srv, file_names)
+  srv.trigger.before [:up, :reload, :provision] do |trigger|
     trigger.ruby do |env, machine|
       files_found = true
       file_names.each do |file_name|
@@ -459,17 +374,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Start VM configuration
     config.vm.define name do |srv|
-      # Perform checks
-      config.trigger.after :up do |trigger|
-        #
-        # Perform plugin checks before main setup
-        #
-        server['required_plugins'].each { |name| plugin_check(name) } if server['required_plugins']
-        #
-        # Perform software checks before main setup
-        #
-        local_software_file_check(config, server['software_files']) if server['software_files']
-        local_software_file_check(config, [puppet_installer]) if puppet_installer # Check if installer folder is present
+      #
+      # Perform plugin checks before main setup
+      #
+      server['required_plugins'].each { |name| plugin_check(name) } if server['required_plugins']
+      #
+      # Perform software checks before main setup
+      #
+      local_software_file_check(srv, server['software_files']) if server['software_files']
+      local_software_file_check(srv, [puppet_installer]) if puppet_installer # Check if installer folder is present
+      srv.trigger.before :up do |trigger|
+        trigger.info = "Starting DHCP fix process..."
+        trigger.run = {inline: "sh -c \"until vboxmanage guestcontrol #{name} run \"/usr/bin/sudo\" --username vagrant --password vagrant --verbose --wait-stdout dhclient; do c=$((${c:-1}+1)); test $c -gt 50 && exit; sleep 20; done > /dev/null 2>&1 &\""}
       end
 
       srv.vm.communicator = server['protocol'] || 'ssh'
@@ -503,8 +419,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # Depending on the machine type, perform setup
       #
       case server['type']
-      when 'raw'
-        raw_setup(config, server, srv, hostname)
       when 'masterless'
         masterless_setup(config, server, srv, hostname)
       when 'pe-master'
@@ -522,11 +436,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
       end
 
-      config.vm.provider :virtualbox do |vb|
+      srv.vm.provider :virtualbox do |vb|
         # vb.gui = true
         vb.cpus = server['cpucount'] || 1
         vb.memory = server['ram'] || 4096
         vb.name = name
+        # Prevent vagrant from setting up dns proxy, and thus changing /etc/resolv.conf
+        vb.auto_nat_dns_proxy = false
+        vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
+        vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
 
         # Setup config fixes for Oracle product
         virtualboxorafix(vb) if server['virtualboxorafix']
