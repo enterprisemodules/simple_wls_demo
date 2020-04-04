@@ -1,0 +1,9 @@
+---
+role: role::wls::server
+
+wls_profile::java_version:                        8u241
+wls_profile::java_full_version:                   jdk1.8.0_241
+wls_profile::jdk_home:                            /usr/java/jdk1.8.0_241
+wls_profile::weblogic::wls_software::file_name:   fmw_14.1.1.0.0_wls.jar
+wls_profile::weblogic_version:                    14110
+wls_profile::adminserver_address:                 wls14110n1.example.com
