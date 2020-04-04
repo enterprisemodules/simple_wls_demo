@@ -1,34 +1,4 @@
-profile::base::hosts::list:
-  wlsmaster.example.com:
-    ip: 192.168.253.10
-    host_aliases:
-      - wlsmaster
-      - puppet
-  wls12212n1.example.com:
-    ip: 10.10.12.30
-    host_aliases:
-      - wls12212n1
-  wls12212n2.example.com:
-    ip: 10.10.12.31
-    host_aliases:
-      - wls12212n2
-  wls12213n1.example.com:
-    ip: 10.10.13.30
-    host_aliases:
-      - wls12213n1
-  wls12213n2.example.com:
-    ip: 10.10.13.31
-    host_aliases:
-      - wls12213n2
-  wls12214n1.example.com:
-    ip: 10.10.13.32
-    host_aliases:
-      - wls12214n1
-  wls12214n2.example.com:
-    ip: 10.10.13.33
-    host_aliases:
-      - wls12213n2
-
+profile::base::hosts::list: {}
 wls_profile::domain_name:         dom0
 wls_profile::cluster_name:        clus
 wls_profile::weblogic_password:   S3cr3tstuff!
