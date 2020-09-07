@@ -31,3 +31,4 @@ modules/timezone
 .DS_Store
 /modules/firewalld
 /modules/jdksolaris
+/modules/java
