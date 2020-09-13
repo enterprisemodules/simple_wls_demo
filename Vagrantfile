@@ -72,7 +72,7 @@ end
 # Return a shell command that ensures that all vagrant hosts are in /etc/hosts
 def hosts_file(vms, ostype)
   if ostype == 'linux'
-    commands = 'sed -i -e /127.0.0.1.*/d /etc/hosts;'
+    commands = 'sed -i -e /127.0.*.1.*/d /etc/hosts;'
     vms.each do |k, v|
       hostname =  k[3..-1]
       domain   = v['domain_name']
