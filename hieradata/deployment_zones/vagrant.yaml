@@ -1,4 +1,3 @@
 profile::base::hosts::list: {}
 wls_profile::domain_name:         dom0
 wls_profile::cluster_name:        clus
-wls_profile::weblogic_password:   S3cr3tstuff!
