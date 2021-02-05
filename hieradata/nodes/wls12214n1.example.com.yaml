@@ -10,12 +10,12 @@ wls_profile::weblogic::wls_software::file_name:   fmw_12.2.1.4.0_wls.jar
 wls_profile::weblogic_version:                    12214
 
 
-wls_profile::::servers:
-  wls12212n1.example.com:
-    machine_name:     wls12212n1.example.com
-    listenaddress:    wls12212n1.example.com
+wls_profile::servers:
+  wls12214n1.example.com:
+    machine_name:     wls12214n1.example.com
+    listenaddress:    wls12214n1.example.com
     server_arguments: []
-  wls12212n2.example.com:
-    machine_name:     wls12212n2.example.com
-    listenaddress:    wls12212n2.example.com
+  wls12214n2.example.com:
+    machine_name:     wls12214n2.example.com
+    listenaddress:    wls12214n2.example.com
     server_arguments: []

@@ -10,7 +10,7 @@ wls_profile::weblogic::wls_software::file_name:   fmw_14.1.1.0.0_wls.jar
 wls_profile::weblogic_version:                    14110
 
 
-wls_profile::::servers:
+wls_profile::servers:
   wls14110n1.example.com:
     machine_name:     wls14110n1.example.com
     listenaddress:    wls14110n1.example.com
