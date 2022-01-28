@@ -35,118 +35,142 @@ pe-wlsmaster:
 ml-wls12212n1:
   public_ip:        '192.168.56.10'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.2.0_wls.jar
     - jce_policy-8.zip
 
 ml-wls12212n2:
   public_ip:        '192.168.56.11'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.2.0_wls.jar
     - jce_policy-8.zip
 
 ml-wls12213n1:
   public_ip:        '192.168.56.20'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.3.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751288_122130_Generic.zip
     - jce_policy-8.zip
 
 ml-wls12213n2:
   public_ip:        '192.168.56.21'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.3.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751288_122130_Generic.zip
     - jce_policy-8.zip
 
 ml-wls12214n1:
   public_ip:        '192.168.56.30'
   software_files:
-    - jdk-8u231-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.4.0_wls.jar
     - jce_policy-8.zip
+    - p28186730_139428_Generic.zip
+    - p33751264_122140_Generic.zip
 
 ml-wls12214n2:
   public_ip:        '192.168.56.31'
   software_files:
-    - jdk-8u231-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.4.0_wls.jar
     - jce_policy-8.zip
+    - p28186730_139428_Generic.zip
+    - p33751264_122140_Generic.zip
 
 ml-wls14110n1:
   public_ip:        '192.168.56.40'
   software_files:
-    - jdk-8u241-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_14.1.1.0.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751244_141100_Generic.zip
     - jce_policy-8.zip
 
 ml-wls14110n2:
   public_ip:        '192.168.56.41'
   software_files:
-    - jdk-8u241-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_14.1.1.0.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751244_141100_Generic.zip
     - jce_policy-8.zip
 
 ml-wls12213soln1:
   public_ip:        '10.10.16.50'
   box:              MartijnDwars/solaris11_4
   software_files:
-    - jdk-8u152-solaris-x64.tar.gz
+    - jdk-8u321-solaris-x64.tar.gz
     - fmw_12.2.1.3.0_wls.jar
 
 pe-wls12212n1:
   public_ip:        '192.168.56.20'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.2.0_wls.jar
     - jce_policy-8.zip
 
 pe-wls12212n2:
   public_ip:        '192.168.56.21'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.2.0_wls.jar
     - jce_policy-8.zip
 
 pe-wls12213n1:
   public_ip:        '192.168.56.30'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.3.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751288_122130_Generic.zip
     - jce_policy-8.zip
 
 pe-wls12213n2:
   public_ip:        '192.168.56.31'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.3.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751288_122130_Generic.zip
     - jce_policy-8.zip
 
 pe-wls12214n1:
   public_ip:        '192.168.56.40'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.4.0_wls.jar
     - jce_policy-8.zip
+    - p28186730_139428_Generic.zip
+    - p33751264_122140_Generic.zip
 
 pe-wls12214n2:
   public_ip:        '192.168.56.41'
   software_files:
-    - jdk-8u152-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_12.2.1.4.0_wls.jar
     - jce_policy-8.zip
+    - p28186730_139428_Generic.zip
+    - p33751264_122140_Generic.zip
 
 pe-wls14110n1:
   public_ip:        '192.168.56.50'
   software_files:
-    - jdk-8u241-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_14.1.1.0.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751244_141100_Generic.zip
     - jce_policy-8.zip
 
 pe-wls14110n2:
   public_ip:        '192.168.56.51'
   software_files:
-    - jdk-8u241-linux-x64.tar.gz
+    - jdk-8u321-linux-x64.tar.gz
     - fmw_14.1.1.0.0_wls.jar
+    - p28186730_139428_Generic.zip
+    - p33751244_141100_Generic.zip
     - jce_policy-8.zip
