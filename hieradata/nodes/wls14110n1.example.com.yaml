@@ -5,15 +5,20 @@ role: role::wls::admin_server
 
 wls_profile::weblogic::wls_software::file_name:   fmw_14.1.1.0.0_wls.jar
 wls_profile::weblogic_version:                    14110
-
+domain_adminserver_machine_name:                  wls14110n1.example.com
 
 wls_profile::servers:
   wls14110n1.example.com:
     machine_name:     wls14110n1.example.com
     listenaddress:    wls14110n1.example.com
+    server_defaults:
+      listenport:     8001
+      ssllistenport:  9001
     server_arguments: []
   wls14110n2.example.com:
     machine_name:     wls14110n2.example.com
     listenaddress:    wls14110n2.example.com
     server_arguments: []
-  
+    server_defaults:
+      listenport:     8001
+      ssllistenport:  9001
