@@ -5,25 +5,26 @@ wls_profile::weblogic_password:     V3ryS3cr1t!
 #
 # Select JDK version
 #
-wls_profile::java_version:                        8u321
-wls_profile::java_full_version:                   jdk1.8.0_321
-wls_profile::jdk_home:                            /usr/java/jdk1.8.0_321
+wls_profile::java_version:                        8u341
+wls_profile::java_full_version:                   jdk1.8.0_341
+wls_profile::jdk_home:                            /usr/java/jdk1.8.0_341
 #
 # Define the required patch level
 #
-wls_profile::weblogic::wls_patches::level:          JAN2022RU
+wls_profile::weblogic::wls_patches::level:          JUL2022RU
 wls_profile::weblogic::wls_patches::patch_window:   00:00 - 23:59
-
 #
 # Correct version of Opatch. 
 #
 wls_profile::weblogic::wls_opatch::list:
-  'Opatch 13.9.4.2.8':
-    opatch_version:     '13.9.4.2.8'
-    patch_file:         p28186730_139428_Generic.zip
+  'Opatch 13.9.4.2.10':
+    opatch_version:     '13.9.4.2.10'
+    patch_file:         p28186730_1394210_Generic.zip
     oracle_home_dir:    "%{lookup('wls_profile::middleware_home')}"
     source:             "%{::wls_profile::source}"
     download_dir:       "/tmp"
     jdk_home_dir:       "%{lookup('wls_profile::jdk_home')}"
     os_user:            "%{::wls_profile::os_user}"
     os_group:           "%{::wls_profile::os_group}"
+
+wls_profile::weblogic::java_software::cryptography_extension_file:  ~
