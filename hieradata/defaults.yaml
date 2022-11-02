@@ -11,7 +11,7 @@ wls_profile::jdk_home:                            /usr/java/jdk1.8.0_341
 #
 # Define the required patch level
 #
-wls_profile::weblogic::wls_patches::level:          JUL2022RU
+wls_profile::weblogic::wls_patches::level:          OCT2022RU
 wls_profile::weblogic::wls_patches::patch_window:   00:00 - 23:59
 #
 # Correct version of Opatch. 
