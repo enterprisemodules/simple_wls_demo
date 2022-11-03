@@ -5,8 +5,13 @@
 defaults:
   domain_name:     example.com
   cpucount:         1
-  box:              enterprisemodules/ol-8.1-x86_64-nocm
-  virtualboxorafix: enable
+  #
+  # Chose one of the boxes you like
+  #
+  # box:              enterprisemodules/ol-8.1-x86_64-nocm    # OracleLinux 8.1
+  # box:              enterprisemodules/ol-9.0-x86_64-nocm    # Oracle Linux 9.0
+  # box:              enterprisemodules/al-9.0-x86_64-nocm    # AlmaLinux 9.0
+  box:              enterprisemodules/rl-9.0-x86_64-nocm    # RockyLinux 9.0
 #
 # The default settings for all ML nodes
 #

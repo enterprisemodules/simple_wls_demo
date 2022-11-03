@@ -4,6 +4,7 @@
 class profile::base::packages()
 {
   $required_package = [
+    'unzip'
   ]
 
   case $::kernel {
