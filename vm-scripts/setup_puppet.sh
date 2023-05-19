@@ -6,7 +6,8 @@ else
   # Install R10K. We need this to download the correct set of puppet modules
   #
   echo 'Installing required gems'
-  /opt/puppetlabs/puppet/bin/gem install r10k --no-document > /dev/null # 2>&1
+  /opt/puppetlabs/puppet/bin/gem install specific_install r10k --no-document > /dev/null # 2>&1
+  /opt/puppetlabs/puppet/bin/gem specific_install -l https://github.com/enterprisemodules/puppet-resource_api.git -b fix_issue_314
 
   echo 'Installing required puppet modules'
   cd /vagrant

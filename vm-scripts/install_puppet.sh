@@ -13,8 +13,8 @@ else
   echo "Installing $PACKAGE"
   unamestr=`uname`
   if [[ "$unamestr" == 'Linux' ]]; then
-    rhel=$(grep '^VERSION_ID' /etc/os-release | awk -F'[=."]' '{ print $3}')
-    yum install -y --nogpgcheck https://yum.puppetlabs.com/puppet-release-el-${rhel}.noarch.rpm > /dev/null
+    rhel=$(awk -F'[ .]' '{if ($1=="AlmaLinux") print $3; else if (NF==8) print $6; else if (NF==9) print $7}' /etc/redhat-release)
+    yum install -y --nogpgcheck https://yum.puppetlabs.com/puppet8-release-el-${rhel}.noarch.rpm > /dev/null
     yum install -y --nogpgcheck $PACKAGE
     rpm -q git || yum install -y --nogpgcheck git
   elif [[ "$unamestr" == 'SunOS' ]]; then
