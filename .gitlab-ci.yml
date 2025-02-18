@@ -10,42 +10,19 @@ wls14110n1_demo_check:
   extends: .demo_check
   variables:
     server: ml-wls14110n1
-  before_script:
-    - mkdir -p modules/software/files
-    - cp ~/software/jdk-8u341-linux-x64.tar.gz modules/software/files
-    - cp ~/software/fmw_14.1.1.0.0_wls.jar modules/software/files
-    - cp ~/software/p28186730_1394210_Generic.zip modules/software/files
-    - cp ~/software/p34686388_141100_Generic.zip modules/software/files
 
 wls12214n1_demo_check:
   extends: .demo_check
   variables:
     server: ml-wls12214n1
-  before_script:
-    - mkdir -p modules/software/files
-    - cp ~/software/jdk-8u341-linux-x64.tar.gz modules/software/files
-    - cp ~/software/fmw_12.2.1.4.0_wls.jar modules/software/files
-    - cp ~/software/p28186730_1394210_Generic.zip modules/software/files
-    - cp ~/software/p34653267_122140_Generic.zip modules/software/files
 
 
 wls12213n1_demo_check:
   extends: .demo_check
   variables:
     server: ml-wls12213n1
-  before_script:
-    - mkdir -p modules/software/files
-    - cp ~/software/jdk-8u341-linux-x64.tar.gz modules/software/files
-    - cp ~/software/fmw_12.2.1.3.0_wls.jar modules/software/files
-    - cp ~/software/p28186730_1394210_Generic.zip modules/software/files
-    - cp ~/software/p34697822_122130_Generic.zip modules/software/files
 
 wls12212n1_demo_check:
   extends: .demo_check
   variables:
     server: ml-wls12212n1
-  before_script:
-    - mkdir -p modules/software/files
-    - cp ~/software/jdk-8u341-linux-x64.tar.gz modules/software/files
-    - cp ~/software/fmw_12.2.1.2.0_wls.jar modules/software/files
-    - cp ~/software/p28186730_1394210_Generic.zip modules/software/files

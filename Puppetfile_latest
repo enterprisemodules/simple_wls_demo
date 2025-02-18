@@ -1,7 +1,12 @@
-mod 'enterprisemodules-easy_type'
-mod 'enterprisemodules-wls_profile'
-mod 'enterprisemodules-wls_config'
-mod 'enterprisemodules-wls_install'
+
+#
+# EM modules
+#
+mod 'easy_type',   git: "https://gitlab-ci-token:#{ENV['CI_TOKEN']}@gitlab.com/enterprisemodules/easy_type_src.git", ref: 'master'
+mod 'wls_install', git: "https://gitlab-ci-token:#{ENV['CI_TOKEN']}@gitlab.com/enterprisemodules/wls_install.git", ref: 'master'
+mod 'wls_config',  git: "https://gitlab-ci-token:#{ENV['CI_TOKEN']}@gitlab.com/enterprisemodules/wls_config.git", ref: 'master'
+mod 'wls_profile', git: "https://gitlab.com/enterprisemodules/wls_profile.git", ref: 'master'
+
 mod 'ipcrm-echo'
 mod 'puppetlabs-stdlib'
 mod 'puppet-augeasproviders_core'
