@@ -11,6 +11,7 @@ wls14110n1_demo_check:
   variables:
     server: ml-wls14110n1
   after_script:
+    - vboxmanage controlvm ml-wls14110n1 poweroff || true
     - vboxmanage unregistervm ml-wls14110n1 --delete-all || true
     - rm -rf /home/gitlab-runner/VirtualBox\ VMs/ml-wls14110n1
 
@@ -19,6 +20,7 @@ wls12214n1_demo_check:
   variables:
     server: ml-wls12214n1
   after_script:
+    - vboxmanage controlvm ml-wls12214n1 poweroff || true
     - vboxmanage unregistervm ml-wls12214n1 --delete-all || true
     - rm -rf /home/gitlab-runner/VirtualBox\ VMs/ml-wls12214n1
 
@@ -27,6 +29,7 @@ wls12213n1_demo_check:
   variables:
     server: ml-wls12213n1
   after_script:
+    - vboxmanage controlvm ml-wls12213n1 poweroff || true
     - vboxmanage unregistervm ml-wls12213n1 --delete-all || true
     - rm -rf /home/gitlab-runner/VirtualBox\ VMs/ml-wls12213n1
 
@@ -35,5 +38,6 @@ wls12212n1_demo_check:
   variables:
     server: ml-wls12212n1
   after_script:
+    - vboxmanage controlvm ml-wls12212n1 poweroff || true
     - vboxmanage unregistervm ml-wls12212n1 --delete-all || true
     - rm -rf /home/gitlab-runner/VirtualBox\ VMs/ml-wls12212n1
