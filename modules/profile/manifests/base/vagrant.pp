@@ -1,14 +1,12 @@
 # Contains all development specific stuff on vagrant boxes
-class profile::base::vagrant()
-{
-
-  if $::kernel == 'Linux' {
+class profile::base::vagrant () {
+  if $facts['kernel'] == 'Linux' {
     $required_packages = [
       'bc',
       'mlocate',
     ]
 
-    package{ $required_packages:
+    package { $required_packages:
       ensure => 'installed',
     }
 
@@ -23,7 +21,7 @@ class profile::base::vagrant()
     }
 
     #add swap file entry to fstab
-    -> exec {'add swapfile entry to fstab':
+    -> exec { 'add swapfile entry to fstab':
       command => '/bin/echo >>/etc/fstab /var/swap.1 swap swap defaults 0 0',
       user    => root,
       unless  => "/bin/grep '^/var/swap.1' /etc/fstab 2>/dev/null",
